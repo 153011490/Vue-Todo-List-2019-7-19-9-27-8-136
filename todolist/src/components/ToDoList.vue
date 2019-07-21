@@ -12,7 +12,7 @@
         </div>
         <br/>
         <ol>
-            <li v-for="(item,index) in filter(type)" :key="index" :id="uuid()" :ref="item" :class="{'checked':filter(type)[index].flag}"><input type="checkbox" @click="itemChecked(index)" :checked="filter(type)[index].flag"><span>{{item.content}}</span></li>
+            <li v-for="(item,index) in filter(type)" :key="index" :id="uuid()" :ref="item" :class="{'checked':filter(type)[index].flag}"><input type="checkbox" @click="itemChecked(index)" :checked="filter(type)[index].flag"><span @dblclick="changeItem($event)"  @keydown.enter="change(item,$event)">{{item.content}}</span></li>
         </ol>
         <div>
             <ul id="filters">
@@ -81,6 +81,14 @@ export default {
         },
         changeType(type){
             this.type=type;
+        },
+        changeItem(e){
+            e.currentTarget.setAttribute('contenteditable',true);
+            e.currentTarget.click;
+        },
+        change(item,e){
+            item.content=e.currentTarget.innerText;
+            e.currentTarget.setAttribute('contenteditable',false);
         }
     }
 }
