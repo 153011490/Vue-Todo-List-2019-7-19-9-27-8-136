@@ -12,7 +12,7 @@
         </div>
         <br/>
         <ol>
-            <li>1</li>
+            <li>item</li>
         </ol>
         <div>
             <ul id="filters">
@@ -37,4 +37,6 @@ export default {
 }
 </script>
 
-
+<style>
+    @import "../css/todolist.css";
+</style>
