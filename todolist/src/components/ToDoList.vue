@@ -12,18 +12,18 @@
         </div>
         <br/>
         <ol>
-            <li v-for="(item,index) in itemList" :key="item.id" :id="uuid()" :ref="item" :class="{'checked':isChecked[index]}"><input type="checkbox" @click="itemChecked(index)"><span>{{item.content}}</span></li>
+            <li v-for="(item,index) in filter(type)" :key="index" :id="uuid()" :ref="item" :class="{'checked':filter(type)[index].flag}"><input type="checkbox" @click="itemChecked(index)" :checked="filter(type)[index].flag"><span>{{item.content}}</span></li>
         </ol>
         <div>
             <ul id="filters">
                 <li>
-                    <a href="#" data-filter="all">ALL</a>
+                    <a href="#" data-filter="all" @click="changeType('all')" ref="all" :class="{'selected':aClass===1}">ALL</a>
                 </li>
                 <li>
-                    <a href="#" data-filter="active">Active</a>
+                    <a href="#" data-filter="active"  @click="changeType('active')" ref="active" :class="{'selected':aClass===2}">Active</a>
                 </li>
                 <li>
-                    <a href="#" data-filter="complete">Complete</a>
+                    <a href="#" data-filter="complete" @click="changeType('complete')" ref="complete" :class="{'selected':aClass===3}">Complete</a>
                 </li>
             </ul>
 
@@ -39,14 +39,14 @@ export default {
         return{
             item:'',
             itemList:[],
-            isChecked:[]
+            type:'all',
+            aClass:''
         }
     },
     methods:{
         addItem(){
             if(this.item!=''){
-                this.itemList.push({id:this.itemList.length,content:this.item});
-                this.isChecked.push(false);
+                this.itemList.push({flag:false,content:this.item});
                 this.item='';
             }
         },
@@ -63,8 +63,24 @@ export default {
             return uuid;
         },
         itemChecked(index){
-            this.isChecked[index]=!this.isChecked[index];
+            this.itemList[index].flag=!this.itemList[index].flag;
             this.$forceUpdate();
+        },
+        filter(type){
+            if(type=='all'){
+                this.aClass=1;
+                return this.itemList;
+            }
+            else if(type=='active'){
+              this.aClass=2;
+               return this.itemList.filter((item,index)=>!this.itemList[index].flag);
+            }else{
+                this.aClass=3;
+              return this.itemList.filter((item,index)=>this.itemList[index].flag);
+            }
+        },
+        changeType(type){
+            this.type=type;
         }
     }
 }
