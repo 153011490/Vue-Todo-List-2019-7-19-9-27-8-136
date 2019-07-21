@@ -12,7 +12,7 @@
         </div>
         <br/>
         <ol>
-            <li v-for="item in itemList" :key="item.id" :id="uuid()"><input type="checkbox">{{item.content}}</li>
+            <li v-for="(item,index) in itemList" :key="item.id" :id="uuid()" :ref="item" :class="{'checked':isChecked[index]}"><input type="checkbox" @click="itemChecked(index)"><span>{{item.content}}</span></li>
         </ol>
         <div>
             <ul id="filters">
@@ -32,18 +32,21 @@
 </template>
 
 <script>
+import { isIP } from 'net';
 export default {
     name:"ToDoList",
     data(){
         return{
             item:'',
-            itemList:[]
+            itemList:[],
+            isChecked:[]
         }
     },
     methods:{
         addItem(){
             if(this.item!=''){
-                this.itemList.push({id:1,content:this.item});
+                this.itemList.push({id:this.itemList.length,content:this.item});
+                this.isChecked.push(false);
                 this.item='';
             }
         },
@@ -58,6 +61,10 @@ export default {
             s[8] = s[13] = s[18] = s[23] = "-";
             var uuid = s.join("");
             return uuid;
+        },
+        itemChecked(index){
+            this.isChecked[index]=!this.isChecked[index];
+            this.$forceUpdate();
         }
     }
 }
